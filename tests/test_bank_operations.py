@@ -26,7 +26,7 @@ def bank_operations():
             "date": "2023-01-02T13:00:00.000",
             "description": "Перевод отменен",
             "from": "Visa 1234567890123456",
-            "to": "Счет 9876543210987654",
+            "to": "Счет 98765432109876544564",
             "operationAmount": {
                 "amount": "10000",
                 "currency": {
@@ -63,3 +63,8 @@ def test_mask_identifier_card(bank_operations):
 def test_mask_identifier_account(bank_operations):
     masked = bank_operations.mask_identifier("Счет 51958934737718181351")
     assert masked == "Счет **1351"
+
+
+def test_filter_executed_operations(bank_operations):
+    filtered = bank_operations.filter_executed_operations()
+    assert len(filtered) == 2  # Проверяем, что отфильтрованы только выполненные операции
