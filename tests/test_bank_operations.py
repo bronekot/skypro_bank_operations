@@ -50,7 +50,7 @@ def bank_operations():
         }
     ]
 
-    bo = BankOperations('../data/operations.json')
+    bo = BankOperations('data/operations.json')
     bo.operations = test_data  # Замена реальных данных на тестовые
     return bo
 

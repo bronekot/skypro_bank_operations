@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 
 class BankOperations:
@@ -27,3 +28,25 @@ class BankOperations:
     def filter_executed_operations(self):
         """Фильтрует и возвращает выполненные операции."""
         return [op for op in self.operations if 'state' in op and op['state'] == 'EXECUTED']
+
+    def print_last_five_executed_operations(self):
+        """Выводит последние 5 выполненных операций."""
+        executed_operations = self.filter_executed_operations()
+        # Сортировка операций по дате в убывающем порядке
+        executed_operations.sort(key=lambda x: datetime.strptime(x['date'], '%Y-%m-%dT%H:%M:%S.%f'), reverse=True)
+
+        # Вывод последних 5 операций
+        for operation in executed_operations[:5]:
+            date = datetime.strptime(operation['date'], '%Y-%m-%dT%H:%M:%S.%f').strftime('%d.%m.%Y')
+            description = operation['description']
+            from_account = self.mask_identifier(operation['from']) if 'from' in operation else "Не указано"
+            to_account = self.mask_identifier(operation['to']) if 'to' in operation else "Не указано"
+            amount = operation['operationAmount']['amount']
+            currency_name = operation['operationAmount']['currency']['name']
+            print(f"{date} {description}\n{from_account} -> {to_account}\n{amount} {currency_name}\n")
+
+
+if __name__ == "__main__":
+    operations_filename = '../data/operations.json'
+    bank_operations = BankOperations(operations_filename)
+    bank_operations.print_last_five_executed_operations()
